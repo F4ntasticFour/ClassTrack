@@ -1,26 +1,9 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-
-namespace Class_Track.Pages;
-
-public class User
-{
-public string FirstName { get; set; }
-public string Password { get; set; }
+@page
+@model ClassTrack.Pages.SigninSuccess
+@{
+    ViewData["Title"] = "Sign In";
 }
-
-public class SigninSuccess : PageModel
-{
-
-public User User { get; set; }
-
-public IActionResult OnGet(string firstName, string password)
-{
-User = new User
-{
-FirstName = firstName,
-Password = password
-};
-return Page();
-}
-}
+<div>
+    <h1>Welcome Back!</h1>
+    <p>@Model.User.FirstName</p>
+</div>
