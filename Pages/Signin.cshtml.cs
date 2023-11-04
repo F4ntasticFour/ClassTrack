@@ -8,17 +8,13 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace ClassTrack.Pages
 {
 
-    public class UserModel
-    {
-        public string FirstName { get; set; }
-        public string Password { get; set; }
-        
-    }
+
+    
 
     public class SigninModel : PageModel
     {
         [BindProperty]
-        public UserModel User { get; set; }
+        public User User { get; set; }
 
         public void OnGet()
         {
