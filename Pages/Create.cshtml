@@ -1,0 +1,26 @@
+@page
+@model ClassTrack.Pages.CreateModel
+
+<container style="display: grid;
+place-items: center">
+    <div class="card p-4 mb-4 col-3 rounded-3 mx-auto shadow-sm" style="margin-top: 150px;">
+        <form method="post">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" asp-for="@Model.Name" class="form-control" id="name" name="Name">
+                <span asp-validation-for="@Model.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="nickname">Nickname</label>
+                <input type="text" asp-for="@Model.Nickname" class="form-control" id="nickname" name="Nickname">
+                <span asp-validation-for="@Model.Nickname" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="number" asp-for="@Model.PhoneNumber" class="form-control" id="phone" name="PhoneNumber">
+                <span asp-validation-for="@Model.PhoneNumber" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary mt-4">Submit</button>
+        </form>
+    </div>
+</container>
