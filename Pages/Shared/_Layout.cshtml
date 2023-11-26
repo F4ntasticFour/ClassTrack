@@ -8,10 +8,10 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/ClassTrack.styles.css" asp-append-version="true"/>
 </head>
-<body>
+<div>
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-        <div class="container">
+        <div class="container" style="background-image: url('liquid-cheese.svg')">
             <a class="navbar-brand" asp-area="" asp-page="/Index">ClassTrack</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
@@ -35,7 +35,9 @@
 </header>
 <div class="container">
     <main role="main" class="pb-3">
+        <body style="background-image: url('liquid-cheese.svg')">
         @RenderBody()
+        </body>
     </main>
 </div>
 
@@ -50,5 +52,5 @@
 <script src="~/js/site.js" asp-append-version="true"></script>
 
 @await RenderSectionAsync("Scripts", required: false)
-</body>
+</div>
 </html>

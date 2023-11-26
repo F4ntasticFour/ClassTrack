@@ -1,3 +1,5 @@
+using System.Data.SqlClient;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -12,6 +14,10 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+const string connectionString = "Server=localhost; Database=ClassTrack; User Id=sa; Password=Saf4002ey_";
+
+SqlConnection connection = new SqlConnection(connectionString);
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

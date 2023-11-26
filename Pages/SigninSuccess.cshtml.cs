@@ -5,8 +5,8 @@ namespace ClassTrack.Pages;
 
 public class User
 {
-    public string FirstName { get; set; }
-    public string Password { get; set; }
+    public string UserName { get; set; }
+    public string ID { get; set; }
 }
 
 public class SigninSuccess : PageModel
@@ -14,12 +14,12 @@ public class SigninSuccess : PageModel
 
     public User User { get; set; }
 
-    public IActionResult OnGet(string firstName, string password)
+    public IActionResult OnGet(string username, string userID)
     {
         User = new User
         {
-            FirstName = firstName,
-            Password = password
+            UserName = username,
+            ID = userID
         };
         return Page();
     }
