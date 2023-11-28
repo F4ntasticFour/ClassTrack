@@ -54,13 +54,10 @@ namespace ClassTrack.Pages
                     return RedirectToPage("SigninSuccess", "SigninSuccess",
                         new { UserName = userNameInput, UserID = User_ID });
                 }
-
-                {
                     // Authentication failed
                     //Throw "Invalid username and password" error
                     ModelState.AddModelError(string.Empty, "Invalid username or password.");
                     return Page();
-                }
             }
             return Page();
         }
