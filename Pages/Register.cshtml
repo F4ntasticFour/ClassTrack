@@ -1,0 +1,54 @@
+@page
+@model ClassTrack.Pages.Register
+@{
+    ViewData["Title"] = "Register Page";
+}
+
+<container style="display: grid;
+place-items: center">
+    <div class="card p-4 mb-4 col-3 rounded-3 mx-auto shadow-sm box-shadow" style="margin-top: 2%;
+margin-bottom: 2%; width: 400px">
+        <h2 class="mx-auto mt-2">Register</h2>
+        <div class="form-group mt-2">
+            <form method="post" asp-validation-summary="none">
+                <div class="form-group mt-3">
+                    <label for="UserName">Username:</label>
+                    <input asp-for="@Model.UserNameInput" id="UserName" class="form-control" placeholder="John Doe" type="text"/>
+                    <span asp-validation-for="@Model.UserNameInput" class="text-danger"></span>
+                </div>
+                <div class="form-group mt-3">
+                    <label for="UserEmail">Email:</label>
+                    <input asp-for="@Model.UserEmailInput" id="UserEmail" class="form-control" placeholder="JohnDoe@email.com" type="text"/>
+                    <span asp-validation-for="@Model.UserEmailInput" class="text-danger"></span>
+                </div>
+                <div class="form-group mt-3">
+                    <label for="UserGender">Gender:</label>
+                    <select asp-for="@Model.UserGender" id="UserGender" placeholder="Gender" class="form-control dropdown">
+                        <option value="true">Male</option>
+                        <option value="false">Female</option>
+                    </select>
+                    <span asp-validation-for="@Model.UserGender" class="text-danger"></span>
+                </div>
+                <div class="form-group mt-3">
+                    <label for="UserID">User ID:</label>
+                    <input asp-for="@Model.UserIDInput" id="UserID" class="form-control" placeholder="202200000" type="text"/>
+                    <span asp-validation-for="@Model.UserIDInput" class="text-danger"></span>
+                </div>
+                <div class="form-group mt-3">
+                    <label for="UserPassword">Password:</label>
+                    <input asp-for="@Model.UserPasswordInput" id="UserPassword" placeholder="Password" class="form-control" type="password"/>
+                    <span asp-validation-for="@Model.UserPasswordInput" class="text-danger"></span>
+                </div>
+                <div class="form-group mt-3">
+                    <label for="UserPassword">Confirm Password:</label>
+                    <input asp-for="@Model.UserPasswordConfirmationInput" id="UserPasswordConfirmation" class="form-control" placeholder="Password" type="password"/>
+                    <span asp-validation-for="@Model.UserPasswordConfirmationInput" class="text-danger"></span>
+                </div>
+                <div>
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                </div>
+                <button type="submit" class="btn btn-primary mt-4 w-100 d-block">Register</button>
+            </form>
+        </div>
+    </div>
+</container>
