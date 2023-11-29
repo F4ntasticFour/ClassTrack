@@ -27,7 +27,7 @@ namespace ClassTrack.Pages
             //While the input state is valid, the sql request command is executed
             while (ModelState.IsValid)
             {
-                //Connection String to Azure Sql Database
+                //Connection String to Sql Database
                 const string connectionString = "Server=localhost; Database=ClassTrack; User Id=sa; Password=Saf4002ey_";
 
                 using var connection = new SqlConnection(connectionString);
