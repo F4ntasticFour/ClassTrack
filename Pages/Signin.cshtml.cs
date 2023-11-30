@@ -27,6 +27,8 @@ namespace ClassTrack.Pages
             //While the input state is valid, the sql request command is executed
             while (ModelState.IsValid)
             {
+                //TODO
+
                 //Connection String to Sql Database
                 const string connectionString = "Server=localhost; Database=ClassTrack; User Id=sa; Password=Saf4002ey_";
 
@@ -38,6 +40,7 @@ namespace ClassTrack.Pages
                     "SELECT * FROM Users WHERE USER_NAME = @UserName AND USER_PASSWORD = @Password";
 
                 var command = new SqlCommand(query, connection);
+                //TODO
 
                 //Add Parameters with input values
                 command.Parameters.AddWithValue("@UserName", userNameInput);
