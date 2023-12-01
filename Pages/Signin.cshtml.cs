@@ -20,48 +20,52 @@ namespace ClassTrack.Pages
 
         // User ID Variable
         public int User_ID { get; set; }
-        private string GetUserRoleUsingADO(int User_ID, string passwordInput)
+
+        public string GetUserRoleUsingADO(int User_ID, string passwordInput)
         {
             using (SqlConnection connection = new SqlConnection("Server=34.155.113.141,1433; Database=classtrack; User Id=sqlserver; Password=YUgMfE.H0^4A'zhS"))
             {
                 connection.Open();
 
                 // Check if the user is in the Student table.
-                string studentQuery = "SELECT 'student' FROM student WHERE student_id = @UserId AND password = @Password";
+                string studentQuery = "SELECT password FROM student WHERE student_id = @UserId AND password = @Password";
                 using (SqlCommand studentCommand = new SqlCommand(studentQuery, connection))
                 {
                     studentCommand.Parameters.AddWithValue("@UserId", User_ID);
                     studentCommand.Parameters.AddWithValue("@Password", passwordInput);
-
-                    if (studentCommand.ExecuteScalar() != null)
+                    using (var studentReader = studentCommand.ExecuteReader())
                     {
-                        return "student";
+                        if (studentReader.Read())
+                        {
+                            return "student";
+                        }
                     }
                 }
 
                 // Check if the user is in the Instructor table.
-                string instructorQuery = "SELECT 'instructor' FROM instructor WHERE instructor_id = @UserId AND password = @Password";
+                string instructorQuery = "SELECT 1 FROM instructor WHERE instructor_id = @UserId AND password = @Password";
                 using (SqlCommand instructorCommand = new SqlCommand(instructorQuery, connection))
                 {
                     instructorCommand.Parameters.AddWithValue("@UserId", User_ID);
                     instructorCommand.Parameters.AddWithValue("@Password", passwordInput);
-
-                    if (instructorCommand.ExecuteScalar() != null)
+                    using (var instructorReader = instructorCommand.ExecuteReader())
                     {
-                        return "instructor";
+                        if (instructorReader.Read())
+                        {
+                            return "instructor";
+                        }
                     }
                 }
 
-                // Handle the case where the user is not found in either table.
-                return string.Empty;
+                // Close the connection after both queries.
+                return "not found";
             }
         }
 
-        
-        //On Post Event Function
+
         public IActionResult OnPost()
         {
-            //While the input state is valid, the sql request command is executed
+            // While the input state is valid, the SQL request command is executed
             while (ModelState.IsValid)
             {
                 string userRole = GetUserRoleUsingADO(User_ID, passwordInput);
@@ -69,17 +73,13 @@ namespace ClassTrack.Pages
                 // Redirect based on the user's role.
                 if (userRole == "student")
                 {
-                    Response.Redirect("/StudentPage");
-                }
-                else if (userRole == "instructor")
+                    return RedirectToPage("/StudentPage");
+                } 
+                if (userRole == "instructor")
                 {
-                    Response.Redirect("/InstructorPage");
+                    return RedirectToPage("/InstructorPage");
                 }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "Invalid username or password.");
-                    return Page();
-                }
+                ModelState.AddModelError(string.Empty,userRole );
             }
             return Page();
         }
