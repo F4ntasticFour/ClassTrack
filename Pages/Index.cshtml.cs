@@ -7,7 +7,7 @@ public class IndexModel : PageModel
 {
     public IActionResult OnPostSignIn()
     {
-        return RedirectToPage("/SignIn");
+        return RedirectToPage("/Signin");
     }
 
     public IActionResult OnPostRegister()
