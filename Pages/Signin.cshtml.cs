@@ -20,6 +20,43 @@ namespace ClassTrack.Pages
 
         // User ID Variable
         public int User_ID { get; set; }
+        private string GetUserRoleUsingADO(int User_ID, string passwordInput)
+        {
+            using (SqlConnection connection = new SqlConnection("Server=34.155.113.141,1433; Database=classtrack; User Id=sqlserver; Password=YUgMfE.H0^4A'zhS"))
+            {
+                connection.Open();
+
+                // Check if the user is in the Student table.
+                string studentQuery = "SELECT 'student' FROM student WHERE student_id = @UserId AND password = @Password";
+                using (SqlCommand studentCommand = new SqlCommand(studentQuery, connection))
+                {
+                    studentCommand.Parameters.AddWithValue("@UserId", User_ID);
+                    studentCommand.Parameters.AddWithValue("@Password", passwordInput);
+
+                    if (studentCommand.ExecuteScalar() != null)
+                    {
+                        return "student";
+                    }
+                }
+
+                // Check if the user is in the Instructor table.
+                string instructorQuery = "SELECT 'instructor' FROM instructor WHERE instructor_id = @UserId AND password = @Password";
+                using (SqlCommand instructorCommand = new SqlCommand(instructorQuery, connection))
+                {
+                    instructorCommand.Parameters.AddWithValue("@UserId", User_ID);
+                    instructorCommand.Parameters.AddWithValue("@Password", passwordInput);
+
+                    if (instructorCommand.ExecuteScalar() != null)
+                    {
+                        return "instructor";
+                    }
+                }
+
+                // Handle the case where the user is not found in either table.
+                return string.Empty;
+            }
+        }
+
         
         //On Post Event Function
         public IActionResult OnPost()
@@ -27,40 +64,22 @@ namespace ClassTrack.Pages
             //While the input state is valid, the sql request command is executed
             while (ModelState.IsValid)
             {
-                //TODO
+                string userRole = GetUserRoleUsingADO(User_ID, passwordInput);
 
-                //Connection String to Sql Database
-                const string connectionString = "Server=localhost; Database=ClassTrack; User Id=sa; Password=Saf4002ey_";
-
-                using var connection = new SqlConnection(connectionString);
-                
-                connection.Open();
-
-                var query =
-                    "SELECT * FROM Users WHERE USER_NAME = @UserName AND USER_PASSWORD = @Password";
-
-                var command = new SqlCommand(query, connection);
-                //TODO
-
-                //Add Parameters with input values
-                command.Parameters.AddWithValue("@UserName", userNameInput);
-                command.Parameters.AddWithValue("@Password", passwordInput);
-
-                var reader = command.ExecuteReader();
-                
-                //If Reader returns True (Data is retrieved from database) proceed
-                if (reader.Read())
+                // Redirect based on the user's role.
+                if (userRole == "student")
                 {
-                    // Authentication successful
-                    //Get user ID
-                    User_ID = reader.GetInt32(0);
-                    return RedirectToPage("SigninSuccess", "SigninSuccess",
-                        new { UserName = userNameInput, UserID = User_ID });
+                    Response.Redirect("/StudentPage");
                 }
-                    // Authentication failed
-                    //Throw "Invalid username and password" error
+                else if (userRole == "instructor")
+                {
+                    Response.Redirect("/InstructorPage");
+                }
+                else
+                {
                     ModelState.AddModelError(string.Empty, "Invalid username or password.");
                     return Page();
+                }
             }
             return Page();
         }
