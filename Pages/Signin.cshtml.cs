@@ -7,59 +7,76 @@ namespace ClassTrack.Pages
 {
     public class SigninModel : PageModel
     {
-        //UserName Input
         [BindProperty]
-        [Required(ErrorMessage = "Name is required.")]
-        public string userNameInput { get; set; }
+        [Required(ErrorMessage = "ID is required.")]
+        public int User_ID { get; set; }
 
-        // Password Input
         [BindProperty]
         [Required(ErrorMessage = "Password is required.")]
         [MaxLength(15, ErrorMessage = "Password cannot exceed 15 characters.")]
-        public string passwordInput { get; set; }
+        public string passwordInput { get; set; } // Set this property with the appropriate value
 
-        // User ID Variable
-        public int User_ID { get; set; }
-        
-        //On Post Event Function
-        public IActionResult OnPost()
+        private string GetUserRoleUsingADO(int User_ID, string passwordInput)
         {
-            //While the input state is valid, the sql request command is executed
-            while (ModelState.IsValid)
+            using (SqlConnection connection =
+                   new SqlConnection(
+                       "Server=34.155.113.141,1433; Database=classtrack; User Id=sqlserver; Password=YUgMfE.H0^4A'zhS"))
             {
-                //Connection String to Sql Database
-                const string connectionString = "Server=localhost; Database=ClassTrack; User Id=sa; Password=Saf4002ey_";
-
-                using var connection = new SqlConnection(connectionString);
-                
                 connection.Open();
 
-                var query =
-                    "SELECT * FROM Users WHERE USER_NAME = @UserName AND USER_PASSWORD = @Password";
-
-                var command = new SqlCommand(query, connection);
-
-                //Add Parameters with input values
-                command.Parameters.AddWithValue("@UserName", userNameInput);
-                command.Parameters.AddWithValue("@Password", passwordInput);
-
-                var reader = command.ExecuteReader();
-                
-                //If Reader returns True (Data is retrieved from database) proceed
-                if (reader.Read())
+                // Check if the user is in the Student table.
+                string studentQuery =
+                    "SELECT student_id FROM student WHERE student_id = @UserId AND password = @Password";
+                using (SqlCommand studentCommand = new SqlCommand(studentQuery, connection))
                 {
-                    // Authentication successful
-                    //Get user ID
-                    User_ID = reader.GetInt32(0);
-                    return RedirectToPage("SigninSuccess", "SigninSuccess",
-                        new { UserName = userNameInput, UserID = User_ID });
+                    studentCommand.Parameters.AddWithValue("@UserId", User_ID);
+                    studentCommand.Parameters.AddWithValue("@Password", passwordInput);
+
+                    if (studentCommand.ExecuteScalar() != null)
+                    {
+                        return "student";
+                    }
                 }
-                    // Authentication failed
-                    //Throw "Invalid username and password" error
-                    ModelState.AddModelError(string.Empty, "Invalid username or password.");
-                    return Page();
+
+                // Check if the user is in the Instructor table.
+                string instructorQuery =
+                    "SELECT instructor_id FROM instructor WHERE instructor_id = @UserId AND password = @Password";
+                using (SqlCommand instructorCommand = new SqlCommand(instructorQuery, connection))
+                {
+                    instructorCommand.Parameters.AddWithValue("@UserId", User_ID);
+                    instructorCommand.Parameters.AddWithValue("@Password", passwordInput);
+
+                    if (instructorCommand.ExecuteScalar() != null)
+                    {
+                        return "instructor";
+                    }
+                }
+
+                // Handle the case where the user is not found in either table.
+                return string.Empty;
             }
-            return Page();
+        }
+
+        public IActionResult OnPost()
+        {
+            // Set User_ID with the appropriate value
+
+            string userRole = GetUserRoleUsingADO(User_ID, passwordInput);
+
+            if (userRole == "student")
+            {
+                return RedirectToPage("/StudentPage");
+            }
+            else if (userRole == "instructor")
+            {
+                return RedirectToPage("/InstructorPage");
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Invalid username or password.");
+                return Page();
+            }
         }
     }
+
 }
