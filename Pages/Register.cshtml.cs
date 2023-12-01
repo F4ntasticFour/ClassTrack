@@ -24,7 +24,7 @@ namespace ClassTrack.Pages
 
         [BindProperty]
         [Required(ErrorMessage = "Gender is required.")]
-        public bool UserGender { get; set; }
+        public string UserGender { get; set; }
 
         [BindProperty]
         [Required(ErrorMessage = "Password is required.")]
@@ -36,6 +36,10 @@ namespace ClassTrack.Pages
         [MinLength(8)]
         [Compare("UserPasswordInput", ErrorMessage = "Passwords must match.")]
         public string UserPasswordConfirmationInput { get; set; }
+        
+        [BindProperty]
+        [Required(ErrorMessage = "User Role is required.")]
+        public string UserRole { get; set; }
 
         public IActionResult OnPost()
         {
@@ -55,32 +59,62 @@ namespace ClassTrack.Pages
             const string connectionString = "Server=34.155.113.141,1433; Database=classtrack; User Id=sqlserver; Password=YUgMfE.H0^4A'zhS";
 
             using var connection = new SqlConnection(connectionString);
-
-            try
+            if (UserRole == "student")
             {
-                connection.Open();
+                try
+                {
+                    connection.Open();
 
-                var query = "INSERT INTO student(student_id, name, gender, email, advisor_id) " +
-                            "VALUES (@UserID, @UserName, @UserGender, @UserEmail, 1)";
+                    var query = "INSERT INTO student(student_id, name, gender, email, advisor_id, password) VALUES (@UserID, @UserName, @UserGender, @UserEmail, 1, @UserPassword)";
 
-                using var command = new SqlCommand(query, connection);
+                    using var command = new SqlCommand(query, connection);
 
-                // Add Parameters with input values
-                command.Parameters.AddWithValue("@UserID", UserIDInput);
-                command.Parameters.AddWithValue("@UserName", UserNameInput);
-                command.Parameters.AddWithValue("@UserGender", UserGender);
-                command.Parameters.AddWithValue("@UserEmail", UserEmailInput);
+                    // Add Parameters with input values
+                    command.Parameters.AddWithValue("@UserID", UserIDInput);
+                    command.Parameters.AddWithValue("@UserName", UserNameInput);
+                    command.Parameters.AddWithValue("@UserGender", UserGender);
+                    command.Parameters.AddWithValue("@UserEmail", UserEmailInput);
+                    command.Parameters.AddWithValue("@UserPassword", UserPasswordInput);
 
-                // Execute the query
-                command.ExecuteNonQuery();
+                    // Execute the query
+                    command.ExecuteNonQuery();
 
-                return RedirectToPage("/Index");
+                    return RedirectToPage("/Index");
+                }
+                catch (Exception ex)
+                {
+                    // Handle the exception, log it, etc.
+                    ModelState.AddModelError(string.Empty, "An error occurred while processing your request.");
+                    return Page();
+                } 
             }
-            catch (Exception ex)
+            else
             {
-                // Handle the exception, log it, etc.
-                ModelState.AddModelError(string.Empty, "An error occurred while processing your request.");
-                return Page();
+                try
+                {
+                    connection.Open();
+
+                    var query = "INSERT INTO instructor(instructor_id, name, email, password) VALUES (@UserID, @UserName, @UserEmail, @UserPassword)";
+
+                    using var command = new SqlCommand(query, connection);
+
+                    // Add Parameters with input values
+                    command.Parameters.AddWithValue("@UserID", UserIDInput);
+                    command.Parameters.AddWithValue("@UserName", UserNameInput);
+                    command.Parameters.AddWithValue("@UserEmail", UserEmailInput);
+                    command.Parameters.AddWithValue("@UserPassword", UserPasswordInput);
+
+                    // Execute the query
+                    command.ExecuteNonQuery();
+
+                    return RedirectToPage("/Index");
+                }
+                catch (Exception ex)
+                {
+                    // Handle the exception, log it, etc.
+                    ModelState.AddModelError(string.Empty, "An error occurred while processing your request.");
+                    return Page();
+                }
             }
         }
     }
