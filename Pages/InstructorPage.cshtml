@@ -11,6 +11,41 @@
 
         </div>
         <div class="card p-2 m-2 d-inline-block" style="color: lightgray; width: 23%; height: 38vh; ">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>recordID</th>
+                    <th>attendancevalue</th>
+                    <th>sectionid</th>
+                    <th>studentid</th>
+                    <th>session id</th>
+
+                </tr>
+                </thead>
+
+                @{
+                    Console.WriteLine($"User count: {Model.record_id.Count}");
+                }
+                @for (int i = 0; i < Model.record_id.Count; i++)
+                {
+                    <tr>@Model.record_id[i]</tr>
+                    <tr>@Model.attendance_value[i]</tr>
+                    <tr>@Model.section_id[i]</tr>
+                    <tr>@Model.student_id[i]</tr>
+                    <tr>@Model.session_id[i]</tr>
+                }
+            </table>
+
+        </div>
+        <div class="card p-2 m-2 d-inline-block" style="color: lightgray; width: 23%; height: 38vh; ">
+
+
+        </div>
+        <div class="card p-2 m-2 d-inline-block" style="color: lightgray; width: 23%; height: 38vh; ">
+
+
+        </div>
+        <div class="card p-2 m-2 d-inline-block" style="color: lightgray; width: 23%; height: 38vh; ">
 
 
         </div>
@@ -23,20 +58,8 @@
 
         </div>
         <div class="card p-2 m-2 d-inline-block" style="color: lightgray; width: 23%; height: 38vh; ">
-        
-        
-        </div>
-        <div class="card p-2 m-2 d-inline-block" style="color: lightgray; width: 23%; height: 38vh; ">
-        
-        
-        </div>
-        <div class="card p-2 m-2 d-inline-block" style="color: lightgray; width: 23%; height: 38vh; ">
-        
-        
-        </div>
-        <div class="card p-2 m-2 d-inline-block" style="color: lightgray; width: 23%; height: 38vh; ">
-        
-        
+
+
         </div>
     </div>
 </container>
