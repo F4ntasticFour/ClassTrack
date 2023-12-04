@@ -5,14 +5,13 @@ namespace ClassTrack.Pages;
 
 public class IndexModel : PageModel
 {
-    private readonly ILogger<IndexModel> _logger;
-
-    public IndexModel(ILogger<IndexModel> logger)
+    public IActionResult OnPostSignIn()
     {
-        _logger = logger;
+        return RedirectToPage("/Signin");
     }
 
-    public void OnGet()
+    public IActionResult OnPostRegister()
     {
+        return RedirectToPage("/Register");
     }
 }
