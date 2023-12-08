@@ -2,18 +2,30 @@
 @model ClassTrack.Pages.StudentPage
 
 @{
-    Layout = null;
+    ViewData["Title"] = "Student Dashboard";
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <title></title>
-</head>
-<body>
-<div>
-    welcome student
-</div>
-</body>
-</html>
+<container style="display: grid; place-items: center; height: 90vh">
+    <div class="card p-4 m-2 col-3 rounded-3 mx-auto my-auto shadow-sm box-shadow d-inline-block" style="margin-top: 2%; margin-bottom: 2%; width: 100%; height: 100%;">
+        @if (Model.Courses != null)
+        {
+            foreach (var course in Model.Courses)
+            {
+                <form method="post">
+                    <div class="card p-4 m-2 d-inline-block" style="color: lightgray; width: 23%; height: 38vh; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);">
+                        <h3>@course.Code</h3>
+                        <p>@course.Title</p>
+                        <p>@course.Semester</p>
+                        <div class="btn-group m-3 d-flex align-items-center" style="position: absolute;bottom: 0px;right: 0px">                        
+                            <button type="submit" name="SelectedCourseCode" value="@course.Code" class="btn btn-sm btn-outline-primary">View</button>
+                        </div>
+                    </div>
+                </form>
+            }
+        }
+        else
+        {
+            <p>No courses found for the student.</p>
+        }
+    </div>
+</container>
