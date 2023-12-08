@@ -52,9 +52,9 @@ namespace ClassTrack.Pages
                 }
             }
         }
-        public IActionResult OnPost(string selectedCourse)
+        public IActionResult OnPost(string SelectedCourseCode)
         {
-            return RedirectToPage("/CoursePage", new { CourseCode = selectedCourse , StudentId = Student_id});
+            return RedirectToPage("/CoursePage", new { CourseCode = SelectedCourseCode , StudentId = Student_id});
         }
     }
 }
