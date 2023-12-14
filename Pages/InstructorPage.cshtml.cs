@@ -18,10 +18,10 @@ public class InstructorPage : PageModel
     public void OnGet()
     {
         {
-            string connectionString = "Server=localhost; Database=master; User Id=sa; Password=reallyStrongPwd123";
+            string connectionString = "Server=34.155.113.141,1433; Database=classtrack; User Id=sqlserver; Password=YUgMfE.H0^4A'zhS";
             SqlConnection con = new SqlConnection(connectionString);
-            string querystring2 = "select * from [attendance_record]";
-            string querystring = "select name from [instructor] where instructor_id = @instructor_id";
+            string querystring2 = "select * from attendance_record";
+            string querystring = "select name from instructor where instructor_id = @instructor_id";
             try
             {
                 con.Open();

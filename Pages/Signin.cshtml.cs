@@ -20,7 +20,7 @@ namespace ClassTrack.Pages
         {
             using (SqlConnection connection =
                    new SqlConnection(
-                       "Server=localhost; Database=master; User Id=sa; Password=reallyStrongPwd123"))
+                       "Server=34.155.113.141,1433; Database=classtrack; User Id=sqlserver; Password=YUgMfE.H0^4A'zhS"))
             {
                 connection.Open();
 
