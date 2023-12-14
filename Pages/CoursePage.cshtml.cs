@@ -13,8 +13,9 @@ namespace ClassTrack.Pages
     {
         [BindProperty(SupportsGet = true)] 
         public string CourseCode { get; set; }
+        [BindProperty(SupportsGet = true)]
         public int StudentId { get; set; }
-        public List<Session> Sessions { get; set; }
+        public List<Session> Sessions { get; set; } = new List<Session>(); // Initialize the list
 
         public void OnGet()
         {
@@ -35,19 +36,19 @@ namespace ClassTrack.Pages
                         {
                             SessionID = (int)reader[0]
                         };
-                        Sessions.Add(session);
+                        Sessions.Add(session); // Now this will work since Sessions is initialized
                     }
                 }
                 catch (SqlException ex)
                 {
-                    // Log the exception for debugging and monitoring
+                    Console.WriteLine($"Error: {ex.Message}");
                 }
             }
         }
 
-        public IActionResult OnPost()
+        public IActionResult OnPost(int SelectedSession)
         {
-            return RedirectToPage("/AttendanceSubmission", new { CourseCode = CourseCode, StudentId = StudentId });
+            return RedirectToPage("/AttendanceSubmission", new { Course_Code = CourseCode, Student_Id = StudentId , Session_id = SelectedSession});
         }
     }
 }

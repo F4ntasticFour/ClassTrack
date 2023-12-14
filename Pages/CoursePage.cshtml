@@ -1,8 +1,8 @@
 ﻿@page
-@model ClassTrack.Pages.StudentPage
+@model ClassTrack.Pages.CoursePage
 
 @{
-    ViewData["Title"] = "Student Dashboard";
+    ViewData["Title"] = "Sessions Dashboard";
 }
 
 <section class="instructor-page-container">
@@ -12,7 +12,7 @@
             foreach (var session in Model.Sessions)
             {
                 <div class="class-card m-3">
-                    <h3 class="text-black h1">@session.SessionID</h3>
+                    <h3 class="text-black h1">week @session.SessionID</h3>
                     <form method="post">
                         <button type="submit" name="SelectedSession" value="@session.SessionID" class="btn btn-sm btn-outline-primary">Attend</button>
                     </form>
@@ -23,7 +23,7 @@
         }
         else
         {
-            <p>No courses found for the student.</p>
+            <p>No sessions found for the student.</p>
         }
     </div>
 </section>
