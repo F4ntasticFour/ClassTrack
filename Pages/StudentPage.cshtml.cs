@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 namespace ClassTrack.Pages
 {
     public class Course
+
     {
         public string Title { get; set; }
         public string Code { get; set; }

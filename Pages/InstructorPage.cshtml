@@ -4,39 +4,119 @@
 @{
     ViewData["Title"] = "Instructor Page";
 }
-<container style="display: grid; place-items: center; height: 90vh">
-    <div class="card p-4 m-2 col-3 rounded-3 mx-auto my-auto shadow-sm box-shadow d-inline-block" style="margin-top: 2%; margin-bottom: 2%; width: 100%; height: 100%;">
-        <div class="card p-4 m-2 d-inline-block" style="color: lightgray; width: 23%; height: 38vh; box-shadow: black ">
+<div class="card mx-auto " style=" background: white;
+                                  margin: 2% ;
+                                  width: 100%;
+                                  height: 80vh ;
+                                  gap: 20px;
+                                  border-radius: 1%;">
+    <nav class="navbar navbar-expand-lg m-3" style="border-radius: 1%;
+background: #FFFFFF">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active text-black" id="course-tab" data-bs-toggle="tab" data-bs-target="#course" type="button" role="tab" aria-controls="course" aria-selected="true">Courses</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link text-black" id="dashboard-tab" data-bs-toggle="tab" data-bs-target="#dashboard" type="button" role="tab" aria-controls="dashboard" aria-selected="false">Dashboard</button>
+            </li>
+            <!-- Rest of your tabs -->
+        </ul>
+    </nav>
+
+    <div class="tab-content m-2" id="myTabContent">
+        <div class="tab-pane fade show active" id="course" role="tabpanel" aria-labelledby="course-tab">
+            <header style="background-color: #FFFFFF; padding: 20px; text-align: center;">
+                <h1>Welcome @Model.instructor_name</h1>
+            </header>
+            <form asp-page-handler="selection" method="post">
+                <div class="container" style="display: flex; justify-content: center; align-items: center; height: 10vh;">
+                    <div class="input-group mb-3">
+                        <select asp-for="@Model.CourseCodeInput" id="specificWeeks" class="form-control dropdown">
+                            <option value="@Model.CourseCode[0]" selected>Section @Model.CourseCode[0] </option>
+                            @for (int i = 1; i < Model.CourseCode.Count; i++)
+                            {
+                                <option value="@Model.CourseCode[i]">Section @Model.CourseCode[i]</option>
+                            }
+                        </select>
+                        <select asp-for="@Model.SectionIdInput" id="specificWeeks" class="form-control dropdown">
+                            <option value="@Model.SectionId[0]" selected>Section @Model.SectionId[0] </option>
+                            @for (int i = 1; i < Model.SectionId.Count; i++)
+                            {
+                                <option value="@Model.SectionId[i]">Section @Model.SectionId[i]</option>
+                            }
+                        </select>
+                        <button class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </form>
+            <!-- Button to open the sidebar -->
 
 
+            <!-- Collapsible sidebar for filtering options -->
+            <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar" aria-labelledby="sidebarLabel">
+                <div class="offcanvas-header">
+                    <h5 id="sidebarLabel">Filtering Options</h5>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <div class="mb-3">
+                        <label for="attendanceStatus" class="form-label">Attendance Status</label>
+                        <select asp-for="@Model.AttendanceValue" id="attendanceStatus" class="form-control dropdown">
+                            <option value="1" selected>Present</option>
+                            <option value="0">Absent</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="specificWeeks" class="form-label">Specific Weeks</label>
+                        <select asp-for="@Model.SessionIdInput" id="specificWeeks" class="form-control dropdown">
+                            <option value="@Model.SessionId[0]" selected>Week @Model.SessionId[0] </option>
+                            @for (int i = 1; i < Model.SessionId.Count; i++)
+                            {
+                                <option value="@Model.SessionId[i]">Week @Model.SessionId[i]</option>
+                            }
+                        </select>
+                    </div>
+                    <form asp-page-handler="filter" method="post">
+                        <button type="submit" class="btn btn-primary mt-4 w-100 d-block">Submit</button>
+                    </form>
+                </div>
+            </div>
+            <h2 class="mx-auto mt-2">Attendance Report</h2>
+            <table class="table table-striped-columns overflow-scroll">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">ID</th>
+                    <th scope="col">Time</th>
+                </tr>
+                </thead>
+                <tbody>
+                @{
+                    for (int i = 0; i < Model.StudentName.Count; i++)
+                    {
+                        <tr>
+                            <th scope="row">@i</th>
+                            <td>@Model.StudentName[i]</td>
+                            <td>@Model.StudentId[i]</td>
+                            <td>@Model.AttendanceValue[i]</td>
+                        </tr>
+                    }
+                }
+                </tbody>
+            </table>
+            <button class="btn btn-outline-primary mt-4 w-50 mx-auto d-block" Submit type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar">
+                Open Filters
+            </button>
         </div>
-        <div class="card p-2 m-2 d-inline-block" style="color: lightgray; width: 23%; height: 38vh; ">
 
 
+        <div class="tab-pane fade" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+            <header style="background-color: #FFFFFF; padding: 20px; text-align: center; border-radius: 1%">
+                <h1>Welcome @Model.instructor_name</h1>
+            </header>
         </div>
-        <div class="card p-2 m-2 d-inline-block" style="color: lightgray; width: 23%; height: 38vh; ">
-
-
-        </div>
-        <div class="card p-2 m-2 d-inline-block" style="color: lightgray; width: 23%; height: 38vh; ">
-
-
-        </div>
-        <div class="card p-2 m-2 d-inline-block" style="color: lightgray; width: 23%; height: 38vh; ">
-        
-        
-        </div>
-        <div class="card p-2 m-2 d-inline-block" style="color: lightgray; width: 23%; height: 38vh; ">
-        
-        
-        </div>
-        <div class="card p-2 m-2 d-inline-block" style="color: lightgray; width: 23%; height: 38vh; ">
-        
-        
-        </div>
-        <div class="card p-2 m-2 d-inline-block" style="color: lightgray; width: 23%; height: 38vh; ">
-        
-        
-        </div>
+        <!-- Rest of your tab panes -->
     </div>
-</container>
+</div>
+
