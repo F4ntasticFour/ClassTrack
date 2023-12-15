@@ -23,7 +23,7 @@ namespace ClassTrack.Pages
 
         public void OnGet()
         {
-            string ConString = "Server=localhost; Database=master; User Id=sa; Password=reallyStrongPwd123";
+            string ConString = "Server=34.155.113.141,1433; Database=classtrack; User Id=sqlserver; Password=YUgMfE.H0^4A'zhS";
 
             using (SqlConnection con = new SqlConnection(ConString))
             {
