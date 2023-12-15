@@ -32,7 +32,7 @@ background: #FFFFFF">
                 <div class="container" style="display: flex; justify-content: center; align-items: center; height: 10vh;">
                     <div class="input-group mb-3">
                         <select asp-for="@Model.CourseCodeInput" id="specificWeeks" class="form-control dropdown">
-                            <option value="@Model.CourseCode[0]" selected>Section @Model.CourseCode[0] </option>
+                            @* <option value="@Model.CourseCode[0]" selected>Section @Model.CourseCode[0] </option> *@
                             @for (int i = 1; i < Model.CourseCode.Count; i++)
                             {
                                 <option value="@Model.CourseCode[i]">Section @Model.CourseCode[i]</option>
