@@ -2,18 +2,71 @@
 @model ClassTrack.Pages.CoursePage
 
 @{
-    Layout = null;
+    ViewData["Title"] = "Sessions Dashboard";
 }
 
-<!DOCTYPE html>
+<section class="instructor-page-container">
+    <div class="card-container">
+        @if (Model.Sessions != null)
+        {
+            foreach (var session in Model.Sessions)
+            {
+                <div class="class-card m-3">
+                    <h3 class="text-black h1">week @session.SessionID</h3>
+                    <form method="post">
+                        <button type="submit" name="SelectedSession" value="@session.SessionID" class="btn btn-sm btn-outline-primary">Attend</button>
+                    </form>
 
-<html>
-<head>
-    <title></title>
-</head>
-<body>
-<div>
-    hello @Model.CourseCode
-</div>
-</body>
-</html>
+
+                </div>
+            }
+        }
+        else
+        {
+            <p>No sessions found for the student.</p>
+        }
+    </div>
+</section>
+
+<style>
+    .instructor-page-container {
+        display: grid;
+        place-items: center;
+        height: 100%;
+    }
+
+    .card-container {
+        background: white;
+        margin: 2% ;
+        width: 105%;
+        height: 105vh;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(370px, 1fr));
+        gap: 20px;
+        border-radius: 1%;
+    }
+
+    .class-card {
+        background: white;
+        color: lightgray;
+        width: 95%;
+        height: 43%;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        position: relative;
+        margin: 2% 1%;
+        border-radius: 3%;
+    }
+
+    .class-title {
+        text-align: center;
+        color: black;
+    }
+
+    .button-group {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        margin: 6%;
+    }
+</style>

@@ -9,16 +9,21 @@ namespace ClassTrack.Pages
     public class Course
     {
         public string Title { get; set; }
-        public int Code { get; set; }
+        public string Code { get; set; }
         public string Semester { get; set; }
+        
+        public string Instructor { get; set; }
+        
+        public int Section { get; set; }
+        public int InstructorID { get; set; }
+
+        
     }
 
     public class StudentPage : PageModel
     {
         [BindProperty(SupportsGet = true)]
         public int Student_id { get; set; }
-        public int InstructorID { get; set; }
-        public int SectionID { get; set; }
         public List<Course> Courses { get; set; }
 
         public void OnGet()
@@ -27,7 +32,7 @@ namespace ClassTrack.Pages
 
             using (SqlConnection con = new SqlConnection(ConString))
             {
-                string querystring1 = "SELECT course.course_code, title, course.semester, instructor.instructor_id, course_section.section_id FROM course, enroll, student, teach, course_section, instructor WHERE student.student_id = @StudentId AND enroll.student_id = @StudentId AND enroll.course_code = course.course_code AND teach.course_code = course.course_code AND teach.instructor_id = instructor.instructor_id AND course_section.course_code = course.course_code";
+                string querystring1 = "SELECT c.course_code, c.title, c.semester, i.name,i.instructor_id, cs.section_id  FROM  student s INNER JOIN enroll e ON s.student_id = e.student_id INNER JOIN course c ON e.course_code = c.course_code INNER JOIN teach t ON c.course_code = t.course_code INNER JOIN instructor i ON t.instructor_id = i.instructor_id INNER JOIN course_section cs ON c.course_code = cs.course_code WHERE s.student_id = @StudentId";
 
                 try
                 {
@@ -40,13 +45,14 @@ namespace ClassTrack.Pages
                     {
                         var course = new Course
                         {
-                            Code = (int)reader[0],
+                            Code = reader[0].ToString(),
                             Title = reader[1].ToString(),
-                            Semester = reader[2].ToString()
+                            Instructor = reader[3].ToString(),
+                            Semester = reader[2].ToString(),
+                            InstructorID = (int)reader[4],
+                            Section = (int)reader[5]
                         };
                         Courses.Add(course);
-                        InstructorID = (int)reader[3];
-                        SectionID = (int)reader[4];
                     }
                 }
                 catch (SqlException ex)
@@ -56,9 +62,10 @@ namespace ClassTrack.Pages
                 }
             }
         }
-        public IActionResult OnPost(string SelectedCourseCode)
+        public IActionResult OnPost(string SelectedCourse)
         {
-            return RedirectToPage("/CoursePage", new { CourseCode = SelectedCourseCode , StudentId = Student_id, InstructorId = InstructorID, SectionId = SectionID});
+            return RedirectToPage("/CoursePage", new { CourseCode = SelectedCourse, StudentId = Student_id });
         }
+
     }
 }

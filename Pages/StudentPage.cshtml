@@ -12,15 +12,19 @@
             foreach (var course in Model.Courses)
             {
                 <div class="class-card m-3">
-                    <h3 class="text-black class-title">@course.Code</h3>
-                    <p class="text-black">@course.Title</p>
-                    <p class="text-black">@course.Semester</p>
+                    <container style="display: grid;
+                    place-items: center">
+                    <h3 class="text-black h1">@course.Code</h3>
+                    <p class="text-black">Title: @course.Title</p>
+                    <p class="text-black">Instructor: @course.Instructor</p>
+                    <p class="text-black">Section: @course.Section</p>
+                    <p class="text-black">Semester: @course.Semester</p>
                     <form method="post">
-                        <div class="button-group">
-                            <button type="submit" name="SelectedCourseCode" value="@course.Code" class="btn btn-sm btn-outline-primary">View</button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                        </div>
+                        <button type="submit" name="SelectedCourse" value="@course.Code" class="btn btn-sm btn-outline-primary">View</button>
                     </form>
+                    </container>
+
+
                 </div>
             }
         }
