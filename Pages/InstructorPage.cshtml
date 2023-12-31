@@ -31,17 +31,27 @@ background: #FFFFFF">
             <form method="post">
                 <div class="container" style="display: flex; justify-content: center; align-items: center; height: 10vh;">
                     <div class="input-group mb-3">
-                        <select asp-for="@Model.coursecode" id="specificWeeks" class="form-control dropdown">
+                        <select asp-for="@Model.CourseCode" id="specificWeeks" class="form-control dropdown">
                             @* <option value="@Model.CourseCode[0]" selected>Section @Model.CourseCode[0] </option> *@
-                            @foreach(var course in Model.coursecodes)
+                            @foreach(var course in Model.CourseCodes)
                             {
-                                <option value="@course">Section @course</option>
+                                <option value="@course">@course</option>
                             }
                         </select>
-                        <select asp-for="@Model.sectionId" id="specificWeeks" class="form-control dropdown">
-                            @foreach (var sectionId in Model.sectionIds)
+                        <select asp-for="@Model.SectionId" id="specificWeeks" class="form-control dropdown">
+                            @foreach (var sectionId in Model.SectionIds)
                             {
                                 <option value="@sectionId">Section @sectionId</option>
+                            }
+                        </select>
+                        <select asp-for="@Model.AttendanceValue" id="attendanceStatus" class="form-control dropdown">
+                            <option value="true" selected>Present</option>
+                            <option value="false">Absent</option>
+                        </select>
+                        <select asp-for="@Model.SessionId" id="specificWeeks" class="form-control dropdown">
+                            @foreach (var sessionId in @Model.SessionsIds)
+                            {
+                                <option value="@sessionId">Week @sessionId</option>
                             }
                         </select>
                         <button class="btn btn-primary">Submit</button>
@@ -52,34 +62,7 @@ background: #FFFFFF">
 
 
             <!-- Collapsible sidebar for filtering options -->
-            <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar" aria-labelledby="sidebarLabel">
-                <div class="offcanvas-header">
-                    <h5 id="sidebarLabel">Filtering Options</h5>
-                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                </div>
-                <div class="offcanvas-body">
-                    <div class="mb-3">
-                        <label for="attendanceStatus" class="form-label">Attendance Status</label>
-                        <select asp-for="@Model.AttendanceValue" id="attendanceStatus" class="form-control dropdown">
-                            <option value="1" selected>Present</option>
-                            <option value="0">Absent</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="specificWeeks" class="form-label">Specific Weeks</label>
-                        <select asp-for="@Model.sessionId" id="specificWeeks" class="form-control dropdown">
-                            @foreach (var sessionId in @Model.sessionIds)
-                            {
-                                <option value="@sessionId">Week @sessionId</option>
-                            }
-                            
-                        </select>
-                    </div>
-                    <form method="post">
-                        <button type="submit" class="btn btn-primary mt-4 w-100 d-block">Submit</button>
-                    </form>
-                </div>
-            </div>
+            
             <h2 class="mx-auto mt-2">Attendance Report</h2>
             <table class="table table-striped-columns overflow-scroll">
                 <thead>
