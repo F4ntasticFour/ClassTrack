@@ -69,7 +69,7 @@ namespace ClassTrack.Pages
             }
             else if (userRole == "instructor")
             {
-                return RedirectToPage("/InstructorPage", new { instructor_id = User_ID });
+                return RedirectToPage("/InstructorPage", new { instructorId = User_ID });
             }
             else
             {
