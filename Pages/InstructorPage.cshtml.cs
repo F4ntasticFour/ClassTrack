@@ -32,16 +32,28 @@ namespace ClassTrack.Pages
         [BindProperty(SupportsGet = true)]
         public int SectionId { get; set; }
         [BindProperty(SupportsGet = true)]
+        public int Section_Id { get; set; }
+        [BindProperty(SupportsGet = true)]
         public int SessionId { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public string CourseCode { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string Course_Code { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public bool? AttendanceValue { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public List<Student> Students { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string Room { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string Date { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string Time { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public int session_Id { get; set; }
 
         public void OnGet()
         {
@@ -173,6 +185,29 @@ namespace ClassTrack.Pages
 
         public IActionResult OnPost()
         {
+            string conString =
+                "Server=34.155.113.141,1433; Database=classtrack; User Id=sqlserver; Password=YUgMfE.H0^4A'zhS";
+            using (SqlConnection con = new SqlConnection(conString))
+            {
+                string query4 =
+                    "INSERT INTO class_session (session_id,room, date, time_slot, section_id) VALUES (@session_id,@room, @date, @time, @sectionid);";
+                try
+                {
+                    con.Open();
+                    SqlCommand read = new SqlCommand(query4, con);
+                    read.Parameters.AddWithValue("@session_id", SessionId);
+                    read.Parameters.AddWithValue("@room", Room);
+                    read.Parameters.AddWithValue("@date", Date);
+                    read.Parameters.AddWithValue("@time", Time);
+                    read.Parameters.AddWithValue("@sectionid", session_Id);
+                    read.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+                
+            }
             return RedirectToPage("/InstructorPage", new { InstructorId, SectionId, SessionId, CourseCode, AttendanceValue });
         }
     }

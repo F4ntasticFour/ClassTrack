@@ -62,7 +62,53 @@ background: #FFFFFF">
 
 
             <!-- Collapsible sidebar for filtering options -->
-            
+            <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar" aria-labelledby="sidebarLabel">
+                <div class="offcanvas-header">
+                    <h5 id="sidebarLabel">Add session</h5>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <form method="post">
+                    <div class="offcanvas-body">
+                        <div class="mb-3">
+                            <label for="specificWeeks" class="form-label">Week</label>
+                            <input asp-for="@Model.session_Id" id="specificWeeks" class="form-control dropdown" type="text"></input>
+                        </div>
+                        <div class="mb-3">
+                            <label for="specificWeeks" class="form-label">Course</label>
+                            <select asp-for="@Model.Course_Code" id="specificWeeks" class="form-control dropdown">
+                                @* <option value="@Model.CourseCode[0]" selected>Section @Model.CourseCode[0] </option> *@
+                                @foreach (var course in Model.CourseCodes)
+                                {
+                                    <option value="@course">@course</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="specificWeeks" class="form-label">Section</label>
+                            <select asp-for="@Model.Section_Id" id="specificWeeks" class="form-control dropdown">
+                                @foreach (var sectionId in @Model.SectionIds)
+                                {
+                                    <option value="@sectionId">Section @sectionId</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="specificWeeks" class="form-label">Time Slot</label>
+                            <input asp-for="@Model.Time" id="specificWeeks" class="form-control dropdown" type="time"></input>
+                        </div>
+                        <div class="mb-3">
+                            <label for="specificWeeks" class="form-label">Date</label>
+                            <input asp-for="@Model.Date" id="specificWeeks" class="form-control dropdown" type="date"></input>
+                        </div>
+                        <div class="mb-3">
+                            <label for="specificWeeks" class="form-label">Room</label>
+                            <input asp-for="@Model.Room" id="specificWeeks" class="form-control dropdown" type="text"></input>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-4 w-100 d-block">Submit</button>
+                    </div>
+                </form>
+                </div>
+            </div>
             <h2 class="mx-auto mt-2">Attendance Report</h2>
             <table class="table table-striped-columns overflow-scroll">
                 <thead>
@@ -88,7 +134,7 @@ background: #FFFFFF">
                 </tbody>
             </table>
             <button class="btn btn-outline-primary mt-4 w-50 mx-auto d-block" Submit type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar">
-                Open Filters
+                Add Session
             </button>
         </div>
 
@@ -100,5 +146,3 @@ background: #FFFFFF">
         </div>
         <!-- Rest of your tab panes -->
     </div>
-</div>
-
