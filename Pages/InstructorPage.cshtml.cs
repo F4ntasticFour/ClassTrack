@@ -49,21 +49,32 @@ namespace ClassTrack.Pages
         [BindProperty(SupportsGet = true)]
         public string Room { get; set; }
         [BindProperty(SupportsGet = true)]
-        public string Date { get; set; }
+        public int Week { get; set; }
         [BindProperty(SupportsGet = true)]
-        public string Time { get; set; }
-        [BindProperty(SupportsGet = true)]
-        public int session_Id { get; set; }
+        public int Count { get; set; }
 
         public void OnGet()
         {
             string conString =
                 "Server=34.155.113.141,1433; Database=classtrack; User Id=sqlserver; Password=YUgMfE.H0^4A'zhS";
-
+            using (SqlConnection con = new SqlConnection(conString))
+            {
+                string countQuery = "SELECT COUNT(*) FROM class_session";
+                try
+                {
+                    con.Open();
+                    SqlCommand countCmd = new SqlCommand(countQuery, con);
+                    Count = (int)countCmd.ExecuteScalar();
+                }
+                catch (SqlException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
             using (SqlConnection con = new SqlConnection(conString))
             {
                 string query1 =
-                    "SELECT cs.section_id, c.course_code, i.name, css.session_id AS course_title FROM course_section cs JOIN course c ON cs.course_code = c.course_code AND cs.semester = c.semester JOIN teach t ON cs.instructor_id = t.instructor_id AND cs.course_code = t.course_code AND cs.semester = t.semester inner join instructor i on i.instructor_id = t.instructor_id inner join class_session css on css.section_id = cs.section_id WHERE t.instructor_id = @InstructorId";
+                    "SELECT cs.section_id, c.course_code, i.name, css.week FROM course_section cs JOIN course c ON cs.course_code = c.course_code AND cs.semester = c.semester JOIN teach t ON cs.instructor_id = t.instructor_id AND cs.course_code = t.course_code AND cs.semester = t.semester inner join instructor i on i.instructor_id = t.instructor_id inner join class_session css on css.section_id = cs.section_id WHERE t.instructor_id = @InstructorId";
                 try
                 {
                     con.Open();
@@ -72,10 +83,23 @@ namespace ClassTrack.Pages
                     SqlDataReader reader = read.ExecuteReader();
                     while (reader.Read())
                     {
-                        SectionIds.Add((int)reader[0]);
-                        CourseCodes.Add(reader[1].ToString());
-                        InstructorName = reader[2].ToString();
-                        SessionsIds.Add((int)reader[3]);
+                        int sectionId = (int)reader[0];
+                        string courseCode = reader[1].ToString();
+                        string instructorName = reader[2].ToString();
+                        int sessionId = (int)reader[3];
+
+                        // Add to lists only if the data is not already present
+                        if (!SectionIds.Contains(sectionId))
+                            SectionIds.Add(sectionId);
+
+                        if (!CourseCodes.Contains(courseCode))
+                            CourseCodes.Add(courseCode);
+
+                        if (string.IsNullOrEmpty(InstructorName))
+                            InstructorName = instructorName; // Set once, assuming it remains the same for all rows
+
+                        if (!SessionsIds.Contains(sessionId))
+                            SessionsIds.Add(sessionId);
                     }
                 }
                 catch (SqlException ex)
@@ -89,14 +113,15 @@ namespace ClassTrack.Pages
                 using (SqlConnection con = new SqlConnection(conString))
                 {
                     string query2 =
-                        "SELECT DISTINCT s.student_id, s.name AS student_name, ar.attendance_value FROM student s JOIN attendance_record ar ON s.student_id = ar.student_id JOIN course_section cs ON ar.section_id = cs.section_id JOIN teach t ON cs.instructor_id = t.instructor_id AND cs.course_code = t.course_code WHERE t.instructor_id = @InstructorId AND cs.section_id = @SectionId AND cs.course_code = @CourseCode";
+                        "SELECT DISTINCT s.student_id, s.name AS student_name, ar.attendance_value FROM student s JOIN attendance_record ar ON s.student_id = ar.student_id JOIN course_section cs ON ar.section_id = cs.section_id JOIN teach t ON cs.instructor_id = t.instructor_id AND cs.course_code = t.course_code JOIN class_session css on css.section_id = cs.section_id WHERE t.instructor_id = @InstructorId AND cs.section_id = @SectionId AND cs.course_code = @CourseCode AND ar.session_id = @sessionid";
                     try
                     {
                         con.Open();
                         SqlCommand read = new SqlCommand(query2, con);
                         read.Parameters.AddWithValue("@InstructorId", InstructorId);
                         read.Parameters.AddWithValue("@SectionId", SectionId);
-                        read.Parameters.AddWithValue("@CourseCode", CourseCode);
+                        read.Parameters.AddWithValue("@CourseCode", CourseCode); 
+                        read.Parameters.AddWithValue("@sessionid", SessionId);
                         SqlDataReader reader = read.ExecuteReader();
                         while (reader.Read())
                         {
@@ -120,7 +145,7 @@ namespace ClassTrack.Pages
                 using (SqlConnection con = new SqlConnection(conString))
                 {
                     string query2 =
-                        "SELECT DISTINCT s.student_id, s.name AS student_name, ar.attendance_value FROM student s JOIN attendance_record ar ON s.student_id = ar.student_id JOIN course_section cs ON ar.section_id = cs.section_id JOIN teach t ON cs.instructor_id = t.instructor_id AND cs.course_code = t.course_code WHERE t.instructor_id = @InstructorId AND cs.section_id = @SectionId AND cs.course_code = @CourseCode AND ar.attendance_value = 1";
+                        "SELECT DISTINCT s.student_id, s.name AS student_name, ar.attendance_value FROM student s JOIN attendance_record ar ON s.student_id = ar.student_id JOIN course_section cs ON ar.section_id = cs.section_id JOIN teach t ON cs.instructor_id = t.instructor_id AND cs.course_code = t.course_code JOIN class_session css on css.section_id = cs.section_id WHERE t.instructor_id = @InstructorId AND cs.section_id = @SectionId AND cs.course_code = @CourseCode AND ar.session_id = @sessionid AND ar.attendance_value = 1";
                     try
                     {
                         con.Open();
@@ -128,7 +153,8 @@ namespace ClassTrack.Pages
                         read.Parameters.AddWithValue("@InstructorId", InstructorId);
                         read.Parameters.AddWithValue("@SectionId", SectionId);
                         read.Parameters.AddWithValue("@CourseCode", CourseCode);
-                        read.Parameters.AddWithValue("@AttendanceValue", AttendanceValue);
+                        read.Parameters.AddWithValue("@sessionid", SessionId);
+                        
                         SqlDataReader reader = read.ExecuteReader();
                         while (reader.Read())
                         {
@@ -153,15 +179,15 @@ namespace ClassTrack.Pages
                 using (SqlConnection con = new SqlConnection(conString))
                 {
                     string query2 =
-                        "SELECT DISTINCT s.student_id, s.name AS student_name, ar.attendance_value FROM student s JOIN attendance_record ar ON s.student_id = ar.student_id JOIN course_section cs ON ar.section_id = cs.section_id JOIN teach t ON cs.instructor_id = t.instructor_id AND cs.course_code = t.course_code WHERE t.instructor_id = @InstructorId AND cs.section_id = @SectionId AND cs.course_code = @CourseCode AND ar.attendance_value = 0";
+                        "SELECT DISTINCT s.student_id, s.name AS student_name, ar.attendance_value FROM student s JOIN attendance_record ar ON s.student_id = ar.student_id JOIN course_section cs ON ar.section_id = cs.section_id JOIN teach t ON cs.instructor_id = t.instructor_id AND cs.course_code = t.course_code JOIN class_session css on css.section_id = cs.section_id WHERE t.instructor_id = @InstructorId AND cs.section_id = @SectionId AND cs.course_code = @CourseCode AND ar.session_id = @sessionid AND ar.attendance_value = 0";
                     try
                     {
                         con.Open();
                         SqlCommand read = new SqlCommand(query2, con);
                         read.Parameters.AddWithValue("@InstructorId", InstructorId);
                         read.Parameters.AddWithValue("@SectionId", SectionId);
-                        read.Parameters.AddWithValue("@CourseCode", CourseCode);
-                        read.Parameters.AddWithValue("@AttendanceValue", AttendanceValue);
+                        read.Parameters.AddWithValue("@CourseCode", CourseCode); 
+                        read.Parameters.AddWithValue("@sessionid", SessionId);
                         SqlDataReader reader = read.ExecuteReader();
                         while (reader.Read())
                         {
@@ -189,17 +215,37 @@ namespace ClassTrack.Pages
                 "Server=34.155.113.141,1433; Database=classtrack; User Id=sqlserver; Password=YUgMfE.H0^4A'zhS";
             using (SqlConnection con = new SqlConnection(conString))
             {
+                string Query = "SELECT session_id FROM class_session WHERE section_id = @SectionId AND week = @Week";
+                try
+                {
+                    con.Open();
+                    SqlCommand read = new SqlCommand(Query, con);
+                    read.Parameters.AddWithValue("@SectionId", SectionId);
+                    read.Parameters.AddWithValue("@Week", Week);
+                    SqlDataReader reader = read.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        SessionId = (int)reader[0];
+                    }
+                   Console.WriteLine(SessionId);
+                }
+                catch (SqlException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+            using (SqlConnection con = new SqlConnection(conString))
+            {
                 string query4 =
-                    "INSERT INTO class_session (session_id,room, date, time_slot, section_id) VALUES (@session_id,@room, @date, @time, @sectionid);";
+                    "INSERT INTO class_session (session_id,room, week, section_id, attendence_code) VALUES (@session_id,@room, @week, @sectionid,FLOOR(RAND() * 100000));";
                 try
                 {
                     con.Open();
                     SqlCommand read = new SqlCommand(query4, con);
-                    read.Parameters.AddWithValue("@session_id", SessionId);
+                    read.Parameters.AddWithValue("@session_id", Count + 1);
                     read.Parameters.AddWithValue("@room", Room);
-                    read.Parameters.AddWithValue("@date", Date);
-                    read.Parameters.AddWithValue("@time", Time);
-                    read.Parameters.AddWithValue("@sectionid", session_Id);
+                    read.Parameters.AddWithValue("@week", Week);
+                    read.Parameters.AddWithValue("@sectionid", Section_Id);
                     read.ExecuteNonQuery();
                 }
                 catch (SqlException ex)
@@ -208,7 +254,7 @@ namespace ClassTrack.Pages
                 }
                 
             }
-            return RedirectToPage("/InstructorPage", new { InstructorId, SectionId, SessionId, CourseCode, AttendanceValue });
+            return RedirectToPage("/InstructorPage", new { InstructorId, SectionId, SessionId, CourseCode, AttendanceValue, Week });
         }
     }
 }
