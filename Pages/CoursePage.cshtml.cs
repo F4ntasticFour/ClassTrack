@@ -23,7 +23,7 @@ namespace ClassTrack.Pages
             string ConString = "Server=34.155.113.141,1433; Database=classtrack; User Id=sqlserver; Password=YUgMfE.H0^4A'zhS";
             using (SqlConnection con = new SqlConnection(ConString))
             {
-                string querystring1 = "SELECT cs.session_id FROM class_session cs JOIN course_section csct ON csct.section_id = cs.section_id JOIN enroll e ON e.course_code = csct.course_code WHERE e.student_id = @StudentID AND e.course_code = @CourseCode";
+                string querystring1 = "SELECT cs.week FROM class_session cs JOIN course_section csct ON csct.section_id = cs.section_id JOIN enroll e ON e.course_code = csct.course_code WHERE e.student_id = @StudentID AND e.course_code = @CourseCode";
                 try
                 {
                     con.Open();
