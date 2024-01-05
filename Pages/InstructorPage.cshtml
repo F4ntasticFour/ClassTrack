@@ -32,8 +32,7 @@ background: #FFFFFF">
                 <div class="container" style="display: flex; justify-content: center; align-items: center; height: 10vh;">
                     <div class="input-group mb-3">
                         <select asp-for="@Model.CourseCode" id="specificWeeks" class="form-control dropdown">
-                            @* <option value="@Model.CourseCode[0]" selected>Section @Model.CourseCode[0] </option> *@
-                            @foreach(var course in Model.CourseCodes)
+                            @foreach (var course in Model.CourseCodes)
                             {
                                 <option value="@course">@course</option>
                             }
@@ -58,84 +57,103 @@ background: #FFFFFF">
                     </div>
                 </div>
             </form>
-            <!-- Button to open the sidebar -->
+        </div>
+    </div>
 
 
-            <!-- Collapsible sidebar for filtering options -->
-            <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar" aria-labelledby="sidebarLabel">
-                <div class="offcanvas-header">
-                    <h5 id="sidebarLabel">Add session</h5>
-                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    <!-- Collapsible sidebar for filtering options -->
+    <form method="post">
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar" aria-labelledby="sidebarLabel">
+            <div class="offcanvas-header">
+                <h5 id="sidebarLabel">Add session</h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+
+            <div class="offcanvas-body">
+                <div class="mb-3">
+                    <label for="specificWeeks" class="form-label">Week</label>
+                    <input asp-for="@Model.Week" id="specificWeeks" class="form-control dropdown" type="text"></input>
                 </div>
-                <form method="post">
-                    <div class="offcanvas-body">
-                        <div class="mb-3">
-                            <label for="specificWeeks" class="form-label">Week</label>
-                            <input asp-for="@Model.Week" id="specificWeeks" class="form-control dropdown" type="text"></input>
-                        </div>
-                        <div class="mb-3">
-                            <label for="specificWeeks" class="form-label">Course</label>
-                            <select asp-for="@Model.CourseCode" id="specificWeeks" class="form-control dropdown">
-                                @* <option value="@Model.CourseCode[0]" selected>Section @Model.CourseCode[0] </option> *@
-                                @foreach (var course in Model.CourseCodes)
-                                {
-                                    <option value="@course">@course</option>
-                                }
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="specificWeeks" class="form-label">Section</label>
-                            <select asp-for="@Model.SectionId" id="specificWeeks" class="form-control dropdown">
-                                @foreach (var sectionId in @Model.SectionIds)
-                                {
-                                    <option value="@sectionId">Section @sectionId</option>
-                                }
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="specificWeeks" class="form-label">Room</label>
-                            <input asp-for="@Model.Room" id="specificWeeks" class="form-control dropdown" type="text"></input>
-                        </div>
-                        <button type="submit" class="btn btn-primary mt-4 w-100 d-block">Submit</button>
-                    </div>
-                </form>
+                <div class="mb-3">
+                    <label for="specificWeeks" class="form-label">Course</label>
+                    <select asp-for="@Model.CourseCode" id="specificWeeks" class="form-control dropdown">
+                        @* <option value="@Model.CourseCode[0]" selected>Section @Model.CourseCode[0] </option> *@
+                        @foreach (var course in Model.CourseCodes)
+                        {
+                            <option value="@course">@course</option>
+                        }
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="specificWeeks" class="form-label">Section</label>
+                    <select asp-for="@Model.SectionId" id="specificWeeks" class="form-control dropdown">
+                        @foreach (var sectionId in @Model.SectionIds)
+                        {
+                            <option value="@sectionId">Section @sectionId</option>
+                        }
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="specificWeeks" class="form-label">Room</label>
+                    <input asp-for="@Model.Room" id="specificWeeks" class="form-control dropdown" type="text"></input>
+                </div>
+                <button type="button" class="btn btn-primary mt-4 w-100 d-block" data-bs-toggle="modal" data-bs-target="#exampleModal">Submit</button>
+            </div>
+        </div>
+    
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title text-center fs-5" id="exampleModalLabel">Lecture Code</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h2 class="text-center">@Model.LectureCode</h2>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
                 </div>
             </div>
-            <h2 class="mx-auto mt-2">Attendance Report</h2>
-            <table class="table table-striped-columns overflow-scroll">
-                <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">ID</th>
-                    <th scope="col">Time</th>
-                </tr>
-                </thead>
-                <tbody>
-                @{
-                    foreach (var student in @Model.Students)
-                    {
-                        <tr>
-                            <th scope="row">@student.StudentId</th>
-                            <td>@student.StudentName</td>
-                            <td>@student.StudentId</td>
-                            <td>@student.AttendanceValue</td>
-                        </tr>
-                    }
-                }
-                </tbody>
-            </table>
-        <button class="btn btn-outline-primary mt-4 w-50 mx-auto d-block" Submit type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar">
-            Add Session
-        </button>
-
         </div>
-
-
-        <div class="tab-pane fade" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
-            <header style="background-color: #FFFFFF; padding: 20px; text-align: center; border-radius: 1%">
-                <h1>Welcome @Model.InstructorName</h1>
-            </header>
-        </div>
-        <!-- Rest of your tab panes -->
     </div>
+    </form>
+    <h2 class="mx-auto mt-2">Attendance Report</h2>
+    <table class="table table-striped-columns overflow-scroll">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">ID</th>
+            <th scope="col">Time</th>
+        </tr>
+        </thead>
+        <tbody>
+        @{
+            foreach (var student in @Model.Students)
+            {
+                <tr>
+                    <th scope="row">@student.StudentId</th>
+                    <td>@student.StudentName</td>
+                    <td>@student.StudentId</td>
+                    <td>@student.AttendanceValue</td>
+                </tr>
+            }
+        }
+        </tbody>
+    </table>
+    <button class="btn btn-outline-primary m-4 w-50 mx-auto d-block" Submit type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar">
+        Add Session
+    </button>
+
+</div>
+
+
+<div class="tab-pane fade" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+    <header style="background-color: #FFFFFF; padding: 20px; text-align: center; border-radius: 1%">
+        <h1>Welcome @Model.InstructorName</h1>
+    </header>
+</div>
+<!-- Rest of your tab panes -->

@@ -47,7 +47,13 @@ namespace ClassTrack.Pages
         [BindProperty(SupportsGet = true)]
         public int Week { get; set; }
         [BindProperty(SupportsGet = true)]
+        
+        public int LectureCode { get; set; }
+        
+        [BindProperty(SupportsGet = true)]
         public int Count { get; set; }
+        
+        Random rnd = new Random();
 
         public void OnGet()
         {
@@ -60,7 +66,7 @@ namespace ClassTrack.Pages
                 {
                     con.Open();
                     SqlCommand countCmd = new SqlCommand(countQuery, con);
-                    Count = 1+(int)countCmd.ExecuteScalar();
+                    Count = 1 + (int)countCmd.ExecuteScalar();
                     Console.WriteLine("count is " +Count.ToString());
                 }   
                 catch (SqlException ex)
@@ -85,7 +91,6 @@ namespace ClassTrack.Pages
                         string instructorName = reader[2].ToString();
                         int sessionId = (int)reader[3];
 
-                        // Add to lists only if the data is not already present
                         if (!SectionIds.Contains(sectionId))
                             SectionIds.Add(sectionId);
 
@@ -203,11 +208,14 @@ namespace ClassTrack.Pages
                     }
                 }
             }
+            LectureCode = rnd.Next(10000,99999);
         }
 
+        
 
         public IActionResult OnPost()
         {
+            
             string conString =
                 "Server=34.155.113.141,1433; Database=classtrack; User Id=sqlserver; Password=YUgMfE.H0^4A'zhS";
             using (SqlConnection con = new SqlConnection(conString))
@@ -231,18 +239,21 @@ namespace ClassTrack.Pages
                     Console.WriteLine(ex.Message);
                 }
             }
+            
+            Console.WriteLine(LectureCode);
             using (SqlConnection con = new SqlConnection(conString))
             {
                 string query4 =
-                    "INSERT INTO class_session (session_id,room, week, section_id, attendence_code) VALUES (@session_id,@room, @week, @sectionid,FLOOR(RAND() * 100000));";
+                    "INSERT INTO class_session (session_id,room, week, section_id, attendence_code) VALUES (@Count,@room, @Week, @Sectionid,@LectureCode);";
                 try
                 {
                     con.Open();
                     SqlCommand read = new SqlCommand(query4, con);
-                    read.Parameters.AddWithValue("@session_id", Count);
+                    read.Parameters.AddWithValue("@Count", Count);
                     read.Parameters.AddWithValue("@room", Room);
-                    read.Parameters.AddWithValue("@week", Week);
-                    read.Parameters.AddWithValue("@sectionid", SectionId);
+                    read.Parameters.AddWithValue("@Week", Week);
+                    read.Parameters.AddWithValue("@Sectionid", SectionId);
+                    read.Parameters.AddWithValue("@LectureCode", LectureCode);
                     read.ExecuteNonQuery();
                     Console.WriteLine("Room"+Room);
                     Console.WriteLine("Week"+Week.ToString());
@@ -252,9 +263,7 @@ namespace ClassTrack.Pages
                 {
                     Console.WriteLine(ex.Message);
                 }
-                
             }
-            
             return RedirectToPage("/InstructorPage", new { InstructorId, SectionId, SessionId, CourseCode, AttendanceValue, Week });
         }
         
