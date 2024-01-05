@@ -9,14 +9,14 @@ namespace ClassTrack.Pages
     {
         [BindProperty]
         [Required(ErrorMessage = "ID is required.")]
-        public int User_ID { get; set; }
+        public int UserId { get; set; }
 
         [BindProperty]
         [Required(ErrorMessage = "Password is required.")]
-        [MaxLength(15, ErrorMessage = "Password cannot exceed 15 characters.")]
-        public string passwordInput { get; set; } // Set this property with the appropriate value
-
-        private string GetUserRoleUsingADO(int User_ID, string passwordInput)
+        [MinLength(8, ErrorMessage = "Password Must exceed 8 characters.")]
+        public required string PasswordInput { get; set; }
+        
+        private string GetUserRoleUsingADO(int userId, string passwordInput)
         {
             using (SqlConnection connection =
                    new SqlConnection(
@@ -29,7 +29,7 @@ namespace ClassTrack.Pages
                     "SELECT student_id FROM student WHERE student_id = @UserId AND password = @Password";
                 using (SqlCommand studentCommand = new SqlCommand(studentQuery, connection))
                 {
-                    studentCommand.Parameters.AddWithValue("@UserId", User_ID);
+                    studentCommand.Parameters.AddWithValue("@UserId", userId);
                     studentCommand.Parameters.AddWithValue("@Password", passwordInput);
 
                     if (studentCommand.ExecuteScalar() != null)
@@ -43,7 +43,7 @@ namespace ClassTrack.Pages
                     "SELECT instructor_id FROM instructor WHERE instructor_id = @UserId AND password = @Password";
                 using (SqlCommand instructorCommand = new SqlCommand(instructorQuery, connection))
                 {
-                    instructorCommand.Parameters.AddWithValue("@UserId", User_ID);
+                    instructorCommand.Parameters.AddWithValue("@UserId", userId);
                     instructorCommand.Parameters.AddWithValue("@Password", passwordInput);
 
                     if (instructorCommand.ExecuteScalar() != null)
@@ -61,15 +61,15 @@ namespace ClassTrack.Pages
         {
             // Set User_ID with the appropriate value
 
-            string userRole = GetUserRoleUsingADO(User_ID, passwordInput);
+            string userRole = GetUserRoleUsingADO(UserId, PasswordInput);
 
             if (userRole == "student")
             {
-                return RedirectToPage("/StudentPage", new { Student_id = User_ID });
+                return RedirectToPage("/StudentPage", new { Student_id = UserId });
             }
             else if (userRole == "instructor")
             {
-                return RedirectToPage("/InstructorPage", new { instructorId = User_ID });
+                return RedirectToPage("/InstructorPage", new { instructorId = UserId });
             }
             else
             {

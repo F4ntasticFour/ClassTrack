@@ -13,13 +13,13 @@ width: 400px">
             <form method="post">
                 <div class="form-group mt-3">
                     <label for="User_ID">ID:</label>
-                    <input asp-for="@Model.User_ID" id="User_ID" class="form-control" placeholder="John Doe" type="text"/>
-                    <span asp-validation-for="@Model.User_ID" class="text-danger"></span>
+                    <input asp-for="@Model.UserId" id="User_ID" class="form-control" placeholder="John Doe" type="text"/>
+                    <span asp-validation-for="@Model.UserId" class="text-danger"></span>
                 </div>
                 <div class="form-group mt-3">
                     <label for="User_Password">Password:</label>
-                    <input asp-for="@Model.passwordInput" id="User_Password" class="form-control" placeholder="Password" type="password"/>
-                    <span asp-validation-for="@Model.passwordInput" class="text-danger"></span>
+                    <input asp-for="@Model.PasswordInput" id="User_Password" class="form-control" placeholder="Password" type="password"/>
+                    <span asp-validation-for="@Model.PasswordInput" class="text-danger"></span>
                 </div>
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
