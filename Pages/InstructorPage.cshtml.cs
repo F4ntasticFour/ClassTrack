@@ -46,9 +46,9 @@ namespace ClassTrack.Pages
         public string Room { get; set; }
         [BindProperty(SupportsGet = true)]
         public int Week { get; set; }
-        [BindProperty(SupportsGet = true)]
         
-        public int LectureCode { get; set; }
+        [TempData]
+        public string LectureCode { get; set; }
         
         [BindProperty(SupportsGet = true)]
         public int Count { get; set; }
@@ -197,7 +197,8 @@ namespace ClassTrack.Pages
                     }
                 }
             }
-            LectureCode = rnd.Next(10000,99999);
+            LectureCode = rnd.Next(10000,99999).ToString();
+            Console.WriteLine("onget"+LectureCode);
         }
 
         
@@ -244,9 +245,10 @@ namespace ClassTrack.Pages
                 }
             }
             
-            Console.WriteLine(LectureCode);
+            
             using (SqlConnection con = new SqlConnection(conString))
             {
+                TempData.Peek(LectureCode);
                 string query4 =
                     "INSERT INTO class_session (session_id,room, week, section_id, attendence_code) VALUES (@Count,@room, @Week, @Sectionid,@LectureCode);";
                 try
@@ -258,6 +260,7 @@ namespace ClassTrack.Pages
                     read.Parameters.AddWithValue("@Week", week);
                     read.Parameters.AddWithValue("@Sectionid", Section_Id);
                     read.Parameters.AddWithValue("@LectureCode", LectureCode);
+                    Console.WriteLine("onpost"+LectureCode);
                     read.ExecuteNonQuery();
                     Console.WriteLine("Count2"+Count.ToString());
                     Console.WriteLine("Room"+Room);

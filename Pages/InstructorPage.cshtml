@@ -4,6 +4,9 @@
 @{
     ViewData["Title"] = "Instructor Page";
 }
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+
 <div class="card mx-auto " style=" background: white;
                                   margin: 2% ;
                                   width: 100%;
@@ -57,6 +60,35 @@ background: #FFFFFF">
                     </div>
                 </div>
             </form>
+             <h2 class="mx-auto mt-2">Attendance Report</h2>
+                <table class="table table-striped-columns overflow-scroll">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">ID</th>
+                        <th scope="col">Time</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @{
+                        foreach (var student in @Model.Students)
+                        {
+                            <tr>
+                                <th scope="row">@student.StudentId</th>
+                                <td>@student.StudentName</td>
+                                <td>@student.StudentId</td>
+                                <td>@student.AttendanceValue</td>
+                            </tr>
+                        }
+                    }
+                    </tbody>
+                </table>
+        </div>
+        <div class="tab-pane fade" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+            <header style="background-color: #FFFFFF; padding: 20px; text-align: center; border-radius: 1%">
+                <h1>Welcome @Model.InstructorName</h1>
+            </header>
         </div>
     </div>
 
@@ -100,6 +132,7 @@ background: #FFFFFF">
                 <button type="button" class="btn btn-primary mt-4 w-100 d-block" data-bs-toggle="modal" data-bs-target="#exampleModal">Submit</button>
             </div>
         </div>
+        
     
 
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -120,40 +153,9 @@ background: #FFFFFF">
         </div>
     </div>
     </form>
-    <h2 class="mx-auto mt-2">Attendance Report</h2>
-    <table class="table table-striped-columns overflow-scroll">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Name</th>
-            <th scope="col">ID</th>
-            <th scope="col">Time</th>
-        </tr>
-        </thead>
-        <tbody>
-        @{
-            foreach (var student in @Model.Students)
-            {
-                <tr>
-                    <th scope="row">@student.StudentId</th>
-                    <td>@student.StudentName</td>
-                    <td>@student.StudentId</td>
-                    <td>@student.AttendanceValue</td>
-                </tr>
-            }
-        }
-        </tbody>
-    </table>
     <button class="btn btn-outline-primary m-4 w-50 mx-auto d-block" Submit type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar">
         Add Session
     </button>
 
-</div>
-
-
-<div class="tab-pane fade" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
-    <header style="background-color: #FFFFFF; padding: 20px; text-align: center; border-radius: 1%">
-        <h1>Welcome @Model.InstructorName</h1>
-    </header>
 </div>
 <!-- Rest of your tab panes -->
