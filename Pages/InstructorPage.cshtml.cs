@@ -18,7 +18,7 @@ namespace ClassTrack.Pages
         [BindProperty(SupportsGet = true)]
         public List<int> SectionIds { get; set; }
         [BindProperty(SupportsGet = true)]
-        public List<int> SessionsIds { get; set; }
+        public List<int> Weeks { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public List<string> CourseCodes { get; set; }
@@ -32,14 +32,10 @@ namespace ClassTrack.Pages
         [BindProperty(SupportsGet = true)]
         public int SectionId { get; set; }
         [BindProperty(SupportsGet = true)]
-        public int Section_Id { get; set; }
-        [BindProperty(SupportsGet = true)]
         public int SessionId { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public string CourseCode { get; set; }
-        [BindProperty(SupportsGet = true)]
-        public string Course_Code { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public bool? AttendanceValue { get; set; }
@@ -64,8 +60,9 @@ namespace ClassTrack.Pages
                 {
                     con.Open();
                     SqlCommand countCmd = new SqlCommand(countQuery, con);
-                    Count = (int)countCmd.ExecuteScalar();
-                }
+                    Count = 1+(int)countCmd.ExecuteScalar();
+                    Console.WriteLine("count is " +Count.ToString());
+                }   
                 catch (SqlException ex)
                 {
                     Console.WriteLine(ex.Message);
@@ -98,8 +95,8 @@ namespace ClassTrack.Pages
                         if (string.IsNullOrEmpty(InstructorName))
                             InstructorName = instructorName; // Set once, assuming it remains the same for all rows
 
-                        if (!SessionsIds.Contains(sessionId))
-                            SessionsIds.Add(sessionId);
+                        if (!Weeks.Contains(sessionId))
+                            Weeks.Add(sessionId);
                     }
                 }
                 catch (SqlException ex)
@@ -227,6 +224,7 @@ namespace ClassTrack.Pages
                     {
                         SessionId = (int)reader[0];
                     } 
+                    Console.WriteLine("session" + SessionId.ToString());
                 }
                 catch (SqlException ex)
                 {
@@ -241,11 +239,14 @@ namespace ClassTrack.Pages
                 {
                     con.Open();
                     SqlCommand read = new SqlCommand(query4, con);
-                    read.Parameters.AddWithValue("@session_id", Count + 1);
+                    read.Parameters.AddWithValue("@session_id", Count);
                     read.Parameters.AddWithValue("@room", Room);
                     read.Parameters.AddWithValue("@week", Week);
-                    read.Parameters.AddWithValue("@sectionid", Section_Id);
+                    read.Parameters.AddWithValue("@sectionid", SectionId);
                     read.ExecuteNonQuery();
+                    Console.WriteLine("Room"+Room);
+                    Console.WriteLine("Week"+Week.ToString());
+                    Console.WriteLine("Section"+SectionId.ToString());
                 }
                 catch (SqlException ex)
                 {
@@ -255,10 +256,6 @@ namespace ClassTrack.Pages
             }
             
             return RedirectToPage("/InstructorPage", new { InstructorId, SectionId, SessionId, CourseCode, AttendanceValue, Week });
-        }
-        public IActionResult OnPostRedirect()
-        {
-            return RedirectToPage("/show_code", new { Instructor_ID = InstructorId });
         }
         
     }
