@@ -72,7 +72,7 @@ background: #FFFFFF">
             <div class="offcanvas-body">
                 <div class="mb-3">
                     <label for="specificWeeks" class="form-label">Week</label>
-                    <input asp-for="@Model.Week" id="specificWeeks" class="form-control dropdown" type="text"></input>
+                    <input asp-for="@Model.week" id="specificWeeks" class="form-control dropdown" type="text"></input>
                 </div>
                 <div class="mb-3">
                     <label for="specificWeeks" class="form-label">Course</label>
@@ -86,7 +86,7 @@ background: #FFFFFF">
                 </div>
                 <div class="mb-3">
                     <label for="specificWeeks" class="form-label">Section</label>
-                    <select asp-for="@Model.SectionId" id="specificWeeks" class="form-control dropdown">
+                    <select asp-for="@Model.Section_Id" id="specificWeeks" class="form-control dropdown">
                         @foreach (var sectionId in @Model.SectionIds)
                         {
                             <option value="@sectionId">Section @sectionId</option>

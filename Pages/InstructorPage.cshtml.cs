@@ -52,6 +52,10 @@ namespace ClassTrack.Pages
         
         [BindProperty(SupportsGet = true)]
         public int Count { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public int Section_Id { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public int week { get; set; }
         
         Random rnd = new Random();
 
@@ -59,21 +63,6 @@ namespace ClassTrack.Pages
         {
             string conString =
                 "Server=34.155.113.141,1433; Database=classtrack; User Id=sqlserver; Password=YUgMfE.H0^4A'zhS";
-            using (SqlConnection con = new SqlConnection(conString))
-            {
-                string countQuery = "SELECT COUNT(*) FROM class_session";
-                try
-                {
-                    con.Open();
-                    SqlCommand countCmd = new SqlCommand(countQuery, con);
-                    Count = 1 + (int)countCmd.ExecuteScalar();
-                    Console.WriteLine("count is " +Count.ToString());
-                }   
-                catch (SqlException ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-            }
             using (SqlConnection con = new SqlConnection(conString))
             {
                 string query1 =
@@ -220,6 +209,21 @@ namespace ClassTrack.Pages
                 "Server=34.155.113.141,1433; Database=classtrack; User Id=sqlserver; Password=YUgMfE.H0^4A'zhS";
             using (SqlConnection con = new SqlConnection(conString))
             {
+                string countQuery = "SELECT COUNT(*) FROM class_session";
+                try
+                {
+                    con.Open();
+                    SqlCommand countCmd = new SqlCommand(countQuery, con);
+                    Count = 1 + (int)countCmd.ExecuteScalar();
+                    Console.WriteLine("count is " +Count.ToString());
+                }   
+                catch (SqlException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+            using (SqlConnection con = new SqlConnection(conString))
+            {
                 string Query = "SELECT session_id FROM class_session WHERE section_id = @SectionId AND week = @Week";
                 try
                 {
@@ -251,20 +255,22 @@ namespace ClassTrack.Pages
                     SqlCommand read = new SqlCommand(query4, con);
                     read.Parameters.AddWithValue("@Count", Count);
                     read.Parameters.AddWithValue("@room", Room);
-                    read.Parameters.AddWithValue("@Week", Week);
-                    read.Parameters.AddWithValue("@Sectionid", SectionId);
+                    read.Parameters.AddWithValue("@Week", week);
+                    read.Parameters.AddWithValue("@Sectionid", Section_Id);
                     read.Parameters.AddWithValue("@LectureCode", LectureCode);
                     read.ExecuteNonQuery();
+                    Console.WriteLine("Count2"+Count.ToString());
                     Console.WriteLine("Room"+Room);
-                    Console.WriteLine("Week"+Week.ToString());
-                    Console.WriteLine("Section"+SectionId.ToString());
+                    Console.WriteLine("Week"+week.ToString());
+                    Console.WriteLine("Section"+Section_Id.ToString());
                 }
                 catch (SqlException ex)
                 {
                     Console.WriteLine(ex.Message);
+                    Console.WriteLine("Count2"+Count.ToString());
                 }
             }
-            return RedirectToPage("/InstructorPage", new { InstructorId, SectionId, SessionId, CourseCode, AttendanceValue, Week });
+            return RedirectToPage("/InstructorPage", new { InstructorId, SectionId, SessionId, CourseCode, AttendanceValue, Week, Count });
         }
         
     }
