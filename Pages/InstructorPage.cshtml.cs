@@ -210,12 +210,16 @@ namespace ClassTrack.Pages
                 "Server=34.155.113.141,1433; Database=classtrack; User Id=sqlserver; Password=YUgMfE.H0^4A'zhS";
             using (SqlConnection con = new SqlConnection(conString))
             {
-                string countQuery = "SELECT COUNT(*) FROM class_session";
+                string countQuery = "SELECT TOP 1 cs.session_id + 1 FROM class_session cs ORDER BY cs.session_id DESC";
                 try
                 {
                     con.Open();
-                    SqlCommand countCmd = new SqlCommand(countQuery, con);
-                    Count = 1 + (int)countCmd.ExecuteScalar();
+                    SqlCommand read = new SqlCommand(countQuery, con);
+                    SqlDataReader reader = read.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Count = (int)reader[0];
+                    }
                     Console.WriteLine("count is " +Count.ToString());
                 }   
                 catch (SqlException ex)
