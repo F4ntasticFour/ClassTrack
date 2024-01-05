@@ -49,7 +49,7 @@ background: #FFFFFF">
                             <option value="false">Absent</option>
                         </select>
                         <select asp-for="@Model.Week" id="specificWeeks" class="form-control dropdown">
-                            @foreach (var sessionId in @Model.SessionsIds)
+                            @foreach (var sessionId in @Model.Weeks)
                             {
                                 <option value="@sessionId">Week @sessionId</option>
                             }
@@ -75,7 +75,7 @@ background: #FFFFFF">
                         </div>
                         <div class="mb-3">
                             <label for="specificWeeks" class="form-label">Course</label>
-                            <select asp-for="@Model.Course_Code" id="specificWeeks" class="form-control dropdown">
+                            <select asp-for="@Model.CourseCode" id="specificWeeks" class="form-control dropdown">
                                 @* <option value="@Model.CourseCode[0]" selected>Section @Model.CourseCode[0] </option> *@
                                 @foreach (var course in Model.CourseCodes)
                                 {
@@ -85,7 +85,7 @@ background: #FFFFFF">
                         </div>
                         <div class="mb-3">
                             <label for="specificWeeks" class="form-label">Section</label>
-                            <select asp-for="@Model.Section_Id" id="specificWeeks" class="form-control dropdown">
+                            <select asp-for="@Model.SectionId" id="specificWeeks" class="form-control dropdown">
                                 @foreach (var sectionId in @Model.SectionIds)
                                 {
                                     <option value="@sectionId">Section @sectionId</option>
@@ -128,11 +128,6 @@ background: #FFFFFF">
         <button class="btn btn-outline-primary mt-4 w-50 mx-auto d-block" Submit type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar">
             Add Session
         </button>
-        <form method="post" asp-page-handler="Redirect">
-            <button class="btn btn-outline-primary mt-4 w-50 mx-auto d-block">
-                Show Code
-            </button>
-        </form>
 
         </div>
 
