@@ -13,7 +13,7 @@
             foreach (var session in Model.Sessions)
             {
                 <div class="class-card m-3" style="">
-                    <h3 class="text-black h1">week @session.SessionID</h3>
+                    <h3 class="text-black h1">Week @session.SessionID</h3>
                     <form method="post">
                         <button type="submit" name="SelectedSession" value="@session.SessionID" class="btn btn-sm btn-outline-primary">Attend</button>
                     </form>
@@ -28,6 +28,7 @@
 </section>
 
 <style>
+    
     .instructor-page-container {
         display: grid;
         place-items: center;
@@ -38,7 +39,7 @@
         background: white;
         margin: 2% ;
         width: 105%;
-        height: 105vh;
+        height: 100%;
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(370px, 1fr));
         gap: 20px;
@@ -49,7 +50,7 @@
         background: white;
         color: lightgray;
         width: 95%;
-        height: 43%;
+        height: 80%;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         padding: 20px;
         position: relative;
@@ -68,4 +69,5 @@
         right: 0;
         margin: 6%;
     }
+
 </style>
