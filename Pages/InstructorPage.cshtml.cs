@@ -226,8 +226,7 @@ namespace ClassTrack.Pages
                     while (reader.Read())
                     {
                         SessionId = (int)reader[0];
-                    }
-                   Console.WriteLine(SessionId);
+                    } 
                 }
                 catch (SqlException ex)
                 {
@@ -254,7 +253,13 @@ namespace ClassTrack.Pages
                 }
                 
             }
+            
             return RedirectToPage("/InstructorPage", new { InstructorId, SectionId, SessionId, CourseCode, AttendanceValue, Week });
         }
+        public IActionResult OnPostRedirect()
+        {
+            return RedirectToPage("/show_code", new { Instructor_ID = InstructorId });
+        }
+        
     }
 }
