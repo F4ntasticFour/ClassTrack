@@ -12,19 +12,17 @@
         {
             foreach (var session in Model.Sessions)
             {
-                <div class="class-card m-3">
+                <div class="class-card m-3" style="">
                     <h3 class="text-black h1">week @session.SessionID</h3>
                     <form method="post">
                         <button type="submit" name="SelectedSession" value="@session.SessionID" class="btn btn-sm btn-outline-primary">Attend</button>
                     </form>
-
-
                 </div>
             }
         }
         else
         {
-            <p>No sessions found for the student.</p>
+            <h2 class="text-center">No sessions found for the student.</h2>
         }
     </div>
 </section>
