@@ -60,35 +60,100 @@ background: #FFFFFF">
                     </div>
                 </div>
             </form>
-             <h2 class="mx-auto mt-2">Attendance Report</h2>
-                <table class="table table-striped-columns overflow-scroll">
-                    <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">ID</th>
-                        <th scope="col">Time</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @{
-                        foreach (var student in @Model.Students)
-                        {
-                            <tr>
-                                <th scope="row">@student.StudentId</th>
-                                <td>@student.StudentName</td>
-                                <td>@student.StudentId</td>
-                                <td>@student.AttendanceValue</td>
-                            </tr>
-                        }
+            <h2 class="mx-auto mt-2">Attendance Report</h2>
+            <table class="table table-striped-columns overflow-scroll">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">ID</th>
+                    <th scope="col">Time</th>
+                </tr>
+                </thead>
+                <tbody>
+                @{
+                    foreach (var student in @Model.Students)
+                    {
+                        <tr>
+                            <th scope="row">@student.StudentId</th>
+                            <td>@student.StudentName</td>
+                            <td>@student.StudentId</td>
+                            <td>@student.AttendanceValue</td>
+                        </tr>
                     }
-                    </tbody>
-                </table>
+                }
+                </tbody>
+            </table>
         </div>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <div class="tab-pane fade" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
             <header style="background-color: #FFFFFF; padding: 20px; text-align: center; border-radius: 1%">
                 <h1>Welcome @Model.InstructorName</h1>
             </header>
+            <div>
+                 <canvas id="attendanceChart" width="800" height="400"></canvas>
+            </div>
+            <script>
+            // Prepare realistic data
+            const data = {
+              section1: [23,34,45,48,34,36,34,23,27,45,59,64,65,54],
+              section2: [64,65,54,45,38,45,54,45,59,45,48,45,48,34],
+              section3: [59,45,48,45,48,34,36,34,23,27,45,59,64,65],
+            };
+            
+            // Create datasets for each section
+            const datasets = Object.keys(data).map(section => ({
+              label: `Section ${section}`,
+              data: data[section].map((value, index) => ({ x: `Week ${index + 1}`, y: value })),
+              fill: false,
+              borderColor: getRandomColor(),
+              pointRadius: 5,
+            }));
+            
+            // Create line chart
+            const ctx = document.getElementById('attendanceChart').getContext('2d');
+            const chart = new Chart(ctx, {
+              type: 'line',
+              data: {
+                datasets: datasets,
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                  x: {
+                    type: 'category',
+                    position: 'bottom',
+                    scaleLabel: {
+                      display: true,
+                      labelString: 'Weeks',
+                    },
+                  },
+                  y: {
+                    type: 'linear',
+                    position: 'left',
+                    scaleLabel: {
+                      display: true,
+                      labelString: 'Attendance',
+                    },
+                  },
+                },
+              },
+            });
+            
+            // Function to generate random color
+            function getRandomColor() {
+              const letters = '0123456789ABCDEF';
+              let color = '#';
+              for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+              }
+              return color;
+            }
+
+            </script>
+            
+
         </div>
     </div>
 
